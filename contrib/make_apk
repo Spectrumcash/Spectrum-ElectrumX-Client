@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+
+pushd ./electrum_dash/gui/kivy/
+make theming
+make release
+popd

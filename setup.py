@@ -2,22 +2,12 @@
 
 # python setup.py sdist --format=zip,gztar
 
+from setuptools import setup
 import os
 import sys
 import platform
-import importlib.util
+import imp
 import argparse
-import subprocess
-
-from setuptools import setup, find_packages
-from setuptools.command.install import install
-
-MIN_PYTHON_VERSION = "3.6"
-_min_python_version_tuple = tuple(map(int, (MIN_PYTHON_VERSION.split("."))))
-
-
-if sys.version_info[:3] < _min_python_version_tuple:
-    sys.exit("Error: Electrum requires Python version >= {}...".format(MIN_PYTHON_VERSION))
 
 with open('contrib/requirements/requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -25,10 +15,10 @@ with open('contrib/requirements/requirements.txt') as f:
 with open('contrib/requirements/requirements-hw.txt') as f:
     requirements_hw = f.read().splitlines()
 
-# load version.py; needlessly complicated alternative to "imp.load_source":
-version_spec = importlib.util.spec_from_file_location('version', 'electrum_dash/version.py')
-version_module = version = importlib.util.module_from_spec(version_spec)
-version_spec.loader.exec_module(version_module)
+version = imp.load_source('version', 'lib/version.py')
+
+if sys.version_info[:3] < (3, 4, 0):
+    sys.exit("Error: Electrum-CHAINCOIN requires Python version >= 3.4.0...")
 
 data_files = []
 
@@ -46,66 +36,58 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['electrum-dash.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['icons/electrum-dash.png'])
+        (os.path.join(usr_share, 'applications/'), ['electrum-chaincoin.desktop']),
+        (os.path.join(usr_share, icons_dirname), ['icons/electrum-chaincoin.png'])
     ]
 
 extras_require = {
     'hardware': requirements_hw,
-    'fast': ['pycryptodomex', 'scrypt>=0.6.0'],
-    'gui': ['pyqt5'],
+    'fast': ['pycryptodomex'],
+    ':python_version < "3.5"': ['typing>=3.0.0'],
 }
-extras_require['full'] = [pkg for sublist in list(extras_require.values()) for pkg in sublist]
-
-
-class CustomInstallCommand(install):
-    def run(self):
-        install.run(self)
-        # potentially build Qt icons file
-        try:
-            import PyQt5
-        except ImportError:
-            pass
-        else:
-            try:
-                path = os.path.join(self.install_lib, "electrum_dash/gui/qt/icons_rc.py")
-                if not os.path.exists(path):
-                    subprocess.call(["pyrcc5", "icons.qrc", "-o", path])
-            except Exception as e:
-                print('Warning: building icons file failed with {}'.format(e))
+extras_require['full'] = extras_require['hardware'] + extras_require['fast']
 
 
 setup(
-    name="Electrum-DASH",
+    name="Electrum-CHAINCOIN",
     version=version.ELECTRUM_VERSION,
-    python_requires='>={}'.format(MIN_PYTHON_VERSION),
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum_dash',
-        'electrum_dash.gui',
-        'electrum_dash.gui.qt',
-        'electrum_dash.plugins',
-    ] + [('electrum_dash.plugins.'+pkg) for pkg in find_packages('electrum_dash/plugins')],
+        'electrum_chaincoin',
+        'electrum_chaincoin_gui',
+        'electrum_chaincoin_gui.qt',
+        'electrum_chaincoin_plugins',
+        'electrum_chaincoin_plugins.audio_modem',
+        'electrum_chaincoin_plugins.cosigner_pool',
+        'electrum_chaincoin_plugins.email_requests',
+        'electrum_chaincoin_plugins.hw_wallet',
+        'electrum_chaincoin_plugins.keepkey',
+        'electrum_chaincoin_plugins.labels',
+        'electrum_chaincoin_plugins.ledger',
+        'electrum_chaincoin_plugins.revealer',
+        'electrum_chaincoin_plugins.trezor',
+        'electrum_chaincoin_plugins.digitalbitbox',
+        'electrum_chaincoin_plugins.virtualkeyboard',
+    ],
     package_dir={
-        'electrum_dash': 'electrum_dash'
+        'electrum_chaincoin': 'lib',
+        'electrum_chaincoin_gui': 'gui',
+        'electrum_chaincoin_plugins': 'plugins',
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum_dash': [
+        'electrum_chaincoin': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],
     },
-    scripts=['electrum_dash/electrum-dash'],
+    scripts=['electrum-chaincoin'],
     data_files=data_files,
-    description="Lightweight Litecoin Wallet",
-    author="Thomas Voegtlin",
-    author_email="thomasv@electrum.org",
-    license="MIT Licence",
-    url="https://electrum-dash.org",
-    long_description="""Lightweight Litecoin Wallet""",
-    cmdclass={
-        'install': CustomInstallCommand,
-    },
+    description="Lightweight Chaincoinpay Wallet",
+    maintainer="akhavr",
+    maintainer_email="akhavr@khavr.com",
+    license="MIT License",
+    url="https://electrum.chaincoin.org",
+    long_description="""Lightweight Chaincoinpay Wallet"""
 )

@@ -3,13 +3,16 @@
 *.swp
 build/
 dist/
-electrum_dash/gui/qt/icons_rc.py
+*.egg/
+/electrum.py
+contrib/pyinstaller/
+Electrum.egg-info/
+gui/qt/icons_rc.py
 locale/
 .devlocaltmp/
 *_trial_temp
 packages
 env/
-env
 .tox/
 .buildozer/
 bin/
@@ -21,6 +24,6 @@ bin/
 .coverage
 
 electrum_data/
-electrum_dash/gui/kivy/theming/light-0.png
-electrum_dash/gui/kivy/theming/light.atlas
-*.egg-info/
+gui/kivy/theming/light-0.png
+gui/kivy/theming/light.atlas
+Electrum_CHAINCOIN.egg-info/

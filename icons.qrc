@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="/" >
-    <file>icons/electrum-dash.png</file>
+    <file>icons/electrum-chaincoin.png</file>
     <file>icons/clock1.png</file>
     <file>icons/clock2.png</file>
     <file>icons/clock3.png</file>
@@ -31,8 +31,6 @@
     <file>icons/qrcode.png</file>
     <file>icons/qrcode_white.png</file>
     <file>icons/preferences.png</file>
-    <file>icons/safe-t_unpaired.png</file>
-    <file>icons/safe-t.png</file>
     <file>icons/seed.png</file>
     <file>icons/status_connected.png</file>
     <file>icons/status_connected_proxy.png</file>
@@ -57,13 +55,13 @@
     <file>icons/warning.png</file>
     <file>icons/zoom.png</file>
     <file>icons/navlogo.png</file>
-    <file>icons/dash_downArrow.png</file>
-    <file>icons/dash_upArrow_small.png</file>
-    <file>icons/dash_upArrow_small_disabled.png</file>
-    <file>icons/dash_downArrow_small.png</file>
-    <file>icons/dash_downArrow_small_disabled.png</file>
-    <file>icons/dash_leftArrow_small.png</file>
-    <file>icons/dash_rightArrow_small.png</file>
+    <file>icons/chaincoin_downArrow.png</file>
+    <file>icons/chaincoin_upArrow_small.png</file>
+    <file>icons/chaincoin_upArrow_small_disabled.png</file>
+    <file>icons/chaincoin_downArrow_small.png</file>
+    <file>icons/chaincoin_downArrow_small_disabled.png</file>
+    <file>icons/chaincoin_leftArrow_small.png</file>
+    <file>icons/chaincoin_rightArrow_small.png</file>
     <file>icons/checkbox/checked.png</file>
     <file>icons/checkbox/unchecked.png</file>
     <file>icons/checkbox/unchecked-dark.png</file>

@@ -1,0 +1,21 @@
+# If you want Electrum-CHAINCOIN to appear in a Linux app launcher ("start menu"), install this by doing:
+# sudo desktop-file-install electrum-chaincoin.desktop
+
+[Desktop Entry]
+Comment=Lightweight Chaincoinpay Client
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" electrum-chaincoin %u"
+GenericName[en_US]=Electrum-CHAINCOIN
+GenericName=Electrum-CHAINCOIN
+Icon=electrum-chaincoin
+Name[en_US]=Electrum Chaincoinpay Wallet
+Name=Electrum Chaincoinpay Wallet
+Categories=Network;
+StartupNotify=false
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/chaincoinpay;
+Actions=Testnet;
+
+[Desktop Action Testnet]
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\" electrum-chaincoin --testnet %u"
+Name=Testnet mode

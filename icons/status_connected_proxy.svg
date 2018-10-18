@@ -147,7 +147,7 @@
     <ellipse
        ry="14.997972"
        rx="14.995141"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.4;fill:url(#linearGradient8317);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.11079514;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.4;fill:url(#linearGradient8317);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.11079514;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-chaincoinarray:none;stroke-chaincoinoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none"
        id="path7691"
        cx="24.00086"
        cy="24.002029" />
@@ -157,17 +157,17 @@
        cy="24.002029"
        cx="24.000866"
        id="path7968"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:url(#radialGradient8319);fill-opacity:1;fill-rule:nonzero;stroke:#003f70;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none" />
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;fill:url(#radialGradient8319);fill-opacity:1;fill-rule:nonzero;stroke:#003f70;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-chaincoinarray:none;stroke-chaincoinoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none" />
     <path
        id="path7970"
        d="M 25.3861,13.485003 C 20.31979,12.724926 15.45183,15.857848 14,20.764516 c 1.18871,3.18039 3.90811,5.70993 7.46677,6.47724 5.29459,1.141602 10.50115,-2.027543 12.01505,-7.143895 -1.18869,-3.180413 -3.90812,-5.709952 -7.46675,-6.477239 -0.217,-0.04678 -0.41248,-0.103152 -0.62897,-0.135619 z"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.404;fill:url(#radialGradient8321);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.09465754;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none" />
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.404;fill:url(#radialGradient8321);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.09465754;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-chaincoinarray:none;stroke-chaincoinoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none" />
     <ellipse
        ry="12.509292"
        rx="12.516688"
        cy="24.009293"
        cx="24.000891"
-       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.54494413;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient8323);stroke-width:1.00000215;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none"
+       style="color:#000000;display:inline;overflow:visible;visibility:visible;opacity:0.54494413;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient8323);stroke-width:1.00000215;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-chaincoinarray:none;stroke-chaincoinoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none"
        id="path7972" />
   </g>
 </svg>

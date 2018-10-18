@@ -5,12 +5,19 @@
 import os
 import sys
 import platform
-import imp
+import importlib.util
 import argparse
 import subprocess
 
 from setuptools import setup, find_packages
 from setuptools.command.install import install
+
+MIN_PYTHON_VERSION = "3.6"
+_min_python_version_tuple = tuple(map(int, (MIN_PYTHON_VERSION.split("."))))
+
+
+if sys.version_info[:3] < _min_python_version_tuple:
+    sys.exit("Error: Electrum requires Python version >= {}...".format(MIN_PYTHON_VERSION))
 
 with open('contrib/requirements/requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -18,10 +25,10 @@ with open('contrib/requirements/requirements.txt') as f:
 with open('contrib/requirements/requirements-hw.txt') as f:
     requirements_hw = f.read().splitlines()
 
-version = imp.load_source('version', 'electrum_dash/version.py')
-
-if sys.version_info[:3] < (3, 4, 0):
-    sys.exit("Error: Dash-Electrum requires Python version >= 3.4.0...")
+# load version.py; needlessly complicated alternative to "imp.load_source":
+version_spec = importlib.util.spec_from_file_location('version', 'electrum_dash/version.py')
+version_module = version = importlib.util.module_from_spec(version_spec)
+version_spec.loader.exec_module(version_module)
 
 data_files = []
 
@@ -45,7 +52,7 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
 
 extras_require = {
     'hardware': requirements_hw,
-    'fast': ['pycryptodomex'],
+    'fast': ['pycryptodomex', 'scrypt>=0.6.0'],
     'gui': ['pyqt5'],
 }
 extras_require['full'] = [pkg for sublist in list(extras_require.values()) for pkg in sublist]
@@ -69,14 +76,16 @@ class CustomInstallCommand(install):
 
 
 setup(
-    name="Dash-Electrum",
+    name="Electrum-DASH",
     version=version.ELECTRUM_VERSION,
+    python_requires='>={}'.format(MIN_PYTHON_VERSION),
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
         'electrum_dash',
         'electrum_dash.gui',
         'electrum_dash.gui.qt',
+        'electrum_dash.plugins',
     ] + [('electrum_dash.plugins.'+pkg) for pkg in find_packages('electrum_dash/plugins')],
     package_dir={
         'electrum_dash': 'electrum_dash'
@@ -90,12 +99,12 @@ setup(
     },
     scripts=['electrum_dash/electrum-dash'],
     data_files=data_files,
-    description="Lightweight Dashpay Wallet",
-    maintainer="akhavr",
-    maintainer_email="akhavr@khavr.com",
-    license="MIT License",
-    url="https://electrum.dash.org",
-    long_description="""Lightweight Dashpay Wallet""",
+    description="Lightweight Litecoin Wallet",
+    author="Thomas Voegtlin",
+    author_email="thomasv@electrum.org",
+    license="MIT Licence",
+    url="https://electrum-dash.org",
+    long_description="""Lightweight Litecoin Wallet""",
     cmdclass={
         'install': CustomInstallCommand,
     },

@@ -31,15 +31,11 @@ import hmac
 import pyaes
 
 from .util import assert_bytes, InvalidPassword, to_bytes, to_string
-from .util import print_stderr
-from .x11hash import getPoWHash
 
 
 try:
     from Cryptodome.Cipher import AES
 except:
-    print_stderr('[crypto] warning: Cryptodome library not available,'
-                 ' falling back to pyaes')
     AES = None
 
 
@@ -134,10 +130,6 @@ def Hash(x: bytes) -> bytes:
     x = to_bytes(x, 'utf8')
     out = bytes(sha256(sha256(x)))
     return out
-
-
-def PoWHash(x):
-    return getPoWHash(to_bytes(x))
 
 
 def hash_160(x: bytes) -> bytes:

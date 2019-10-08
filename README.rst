@@ -1,17 +1,24 @@
-Electrum-CHAINCOIN - Lightweight Chaincoinpay client
+Electrum - Lightweight SpectrumCash client
 =====================================
 
 ::
 
   Licence: MIT Licence
   Author: Thomas Voegtlin
-  Language: Python
-  Homepage: https://electrum.chaincoin.org/
+  ModifiedBy: Sibby Yose
+  Language: Python (>= 3.6)
+  Homepage: https://electrum.org/
 
 
-.. image:: https://travis-ci.org/akhavr/electrum-chaincoin.svg?branch=master
-    :target: https://travis-ci.org/akhavr/electrum-chaincoin
+.. image:: https://travis-ci.org/spesmilo/electrum.svg?branch=master
+    :target: https://travis-ci.org/spesmilo/electrum
     :alt: Build Status
+.. image:: https://coveralls.io/repos/github/spesmilo/electrum/badge.svg?branch=master
+    :target: https://coveralls.io/github/spesmilo/electrum?branch=master
+    :alt: Test coverage statistics
+.. image:: https://d322cqt584bo4o.cloudfront.net/electrum/localized.svg
+    :target: https://crowdin.com/project/electrum
+    :alt: Help translate Electrum online
 
 
 
@@ -20,36 +27,30 @@ Electrum-CHAINCOIN - Lightweight Chaincoinpay client
 Getting started
 ===============
 
-Electrum-CHAINCOIN is a pure python application. If you want to use the
+Electrum is a pure python application. If you want to use the
 Qt interface, install the Qt dependencies::
 
     sudo apt-get install python3-pyqt5
 
 If you downloaded the official package (tar.gz), you can run
-Electrum-CHAINCOIN from its root directory, without installing it on your
+Electrum from its root directory without installing it on your
 system; all the python dependencies are included in the 'packages'
-directory (except x11-hash).
+directory. To run Electrum from its root directory, just do::
 
-To install x11-hash dependency in the 'packages' dir run once::
+    ./electrum-spectrumcash or python electrum-spectrumcash (windows)
 
-    pip3 install -t packages x11-hash
-
-To run Electrum-CHAINCOIN from its root directory, just do::
-
-    ./electrum-chaincoin
-
-You can also install Electrum-CHAINCOIN on your system, by running this command::
+You can also install Electrum on your system, by running this command::
 
     sudo apt-get install python3-setuptools
-    pip3 install .[fast]
+    python3 -m pip install .[fast]
 
 This will download and install the Python dependencies used by
-Electrum-CHAINCOIN, instead of using the 'packages' directory.
+Electrum instead of using the 'packages' directory.
 The 'fast' extra contains some optional dependencies that we think
 are often useful but they are not strictly needed.
 
 If you cloned the git repository, you need to compile extra files
-before you can run Electrum-CHAINCOIN. Read the next section, "Development
+before you can run Electrum. Read the next section, "Development
 Version".
 
 
@@ -59,26 +60,23 @@ Development version
 
 Check out the code from GitHub::
 
-    git clone https://github.com/akhavr/electrum-chaincoin.git
-    cd electrum-chaincoin
+    git clone git://github.com/anonymouszar/electrum-spectrumcash.git
+    cd electrum-spectrumcash
 
 Run install (this should install dependencies)::
 
-    pip3 install .[fast]
+    python3 -m pip install .[fast]
 
-Render the SVG icons to PNGs (optional)::
+For the hashing lib x16rt_hash is required
 
-    for i in lock unlock confirmed status_lagging status_disconnected status_connected_proxy status_connected status_waiting preferences; do convert -background none icons/$i.svg icons/$i.png; done
-
-Compile the icons file for Qt::
-
-    sudo apt-get install pyqt5-dev-tools
-    pyrcc5 icons.qrc -o gui/qt/icons_rc.py
+     git clone https://github.com/random-zebra/x16rt_hash.git
+     cd x16rt_hash
+     python3 setup.py install
 
 Compile the protobuf description file::
 
     sudo apt-get install protobuf-compiler
-    protoc --proto_path=lib/ --python_out=lib/ lib/paymentrequest.proto
+    protoc --proto_path=electrum --python_out=electrum electrum/paymentrequest.proto
 
 Create translations (optional)::
 
@@ -91,14 +89,31 @@ Create translations (optional)::
 Creating Binaries
 =================
 
+Linux (tarball)
+---------------
 
-To create binaries, create the 'packages' directory::
+See :code:`contrib/build-linux/README.md`.
 
-    ./contrib/make_packages
 
-This directory contains the python dependencies used by Electrum-CHAINCOIN.
+Linux (AppImage)
+----------------
+
+See :code:`contrib/build-linux/appimage/README.md`.
+
+
+Mac OS X / macOS
+----------------
+
+See :code:`contrib/osx/README.md`.
+
+
+Windows
+-------
+
+See :code:`contrib/build-wine/README.md`.
+
 
 Android
 -------
 
-See `gui/kivy/Readme.txt` file.
+See :code:`electrum/gui/kivy/Readme.md`.

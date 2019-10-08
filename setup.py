@@ -2,12 +2,22 @@
 
 # python setup.py sdist --format=zip,gztar
 
-from setuptools import setup
 import os
 import sys
 import platform
-import imp
+import importlib.util
 import argparse
+import subprocess
+
+from setuptools import setup, find_packages
+from setuptools.command.install import install
+
+MIN_PYTHON_VERSION = "3.6.1"
+_min_python_version_tuple = tuple(map(int, (MIN_PYTHON_VERSION.split("."))))
+
+
+if sys.version_info[:3] < _min_python_version_tuple:
+    sys.exit("Error: SpectrumCash-Electrum requires Python version >= %s..." % MIN_PYTHON_VERSION)
 
 with open('contrib/requirements/requirements.txt') as f:
     requirements = f.read().splitlines()
@@ -15,10 +25,10 @@ with open('contrib/requirements/requirements.txt') as f:
 with open('contrib/requirements/requirements-hw.txt') as f:
     requirements_hw = f.read().splitlines()
 
-version = imp.load_source('version', 'lib/version.py')
-
-if sys.version_info[:3] < (3, 4, 0):
-    sys.exit("Error: Electrum-CHAINCOIN requires Python version >= 3.4.0...")
+# load version.py; needlessly complicated alternative to "imp.load_source":
+version_spec = importlib.util.spec_from_file_location('version', 'electrum_spectrumcash/version.py')
+version_module = version = importlib.util.module_from_spec(version_spec)
+version_spec.loader.exec_module(version_module)
 
 data_files = []
 
@@ -36,58 +46,49 @@ if platform.system() in ['Linux', 'FreeBSD', 'DragonFly']:
         else:
             usr_share = os.path.expanduser('~/.local/share')
     data_files += [
-        (os.path.join(usr_share, 'applications/'), ['electrum-chaincoin.desktop']),
-        (os.path.join(usr_share, icons_dirname), ['icons/electrum-chaincoin.png'])
+        (os.path.join(usr_share, 'applications/'), ['electrum-spectrumcash.desktop']),
+        (os.path.join(usr_share, icons_dirname), ['electrum_spectrumcash/gui/icons/electrum-spectrumcash.png']),
     ]
 
 extras_require = {
     'hardware': requirements_hw,
     'fast': ['pycryptodomex'],
-    ':python_version < "3.5"': ['typing>=3.0.0'],
+    'gui': ['pyqt5'],
 }
-extras_require['full'] = extras_require['hardware'] + extras_require['fast']
+extras_require['full'] = [pkg for sublist in list(extras_require.values()) for pkg in sublist]
 
 
 setup(
-    name="Electrum-CHAINCOIN",
+    name="SpectrumCash-Electrum",
     version=version.ELECTRUM_VERSION,
+    python_requires='>={}'.format(MIN_PYTHON_VERSION),
     install_requires=requirements,
     extras_require=extras_require,
     packages=[
-        'electrum_chaincoin',
-        'electrum_chaincoin_gui',
-        'electrum_chaincoin_gui.qt',
-        'electrum_chaincoin_plugins',
-        'electrum_chaincoin_plugins.audio_modem',
-        'electrum_chaincoin_plugins.cosigner_pool',
-        'electrum_chaincoin_plugins.email_requests',
-        'electrum_chaincoin_plugins.hw_wallet',
-        'electrum_chaincoin_plugins.keepkey',
-        'electrum_chaincoin_plugins.labels',
-        'electrum_chaincoin_plugins.ledger',
-        'electrum_chaincoin_plugins.revealer',
-        'electrum_chaincoin_plugins.trezor',
-        'electrum_chaincoin_plugins.digitalbitbox',
-        'electrum_chaincoin_plugins.virtualkeyboard',
-    ],
+        'electrum_spectrumcash',
+        'electrum_spectrumcash.gui',
+        'electrum_spectrumcash.gui.qt',
+        'electrum_spectrumcash.plugins',
+    ] + [('electrum_spectrumcash.plugins.'+pkg) for pkg in find_packages('electrum_spectrumcash/plugins')],
     package_dir={
-        'electrum_chaincoin': 'lib',
-        'electrum_chaincoin_gui': 'gui',
-        'electrum_chaincoin_plugins': 'plugins',
+        'electrum_spectrumcash': 'electrum_spectrumcash'
     },
     package_data={
         '': ['*.txt', '*.json', '*.ttf', '*.otf'],
-        'electrum_chaincoin': [
+        'electrum_spectrumcash': [
             'wordlist/*.txt',
             'locale/*/LC_MESSAGES/electrum.mo',
         ],
+        'electrum_spectrumcash.gui': [
+            'icons/*',
+        ],
     },
-    scripts=['electrum-chaincoin'],
+    scripts=['electrum_spectrumcash/electrum-spectrumcash'],
     data_files=data_files,
-    description="Lightweight Chaincoinpay Wallet",
-    maintainer="akhavr",
-    maintainer_email="akhavr@khavr.com",
-    license="MIT License",
-    url="https://electrum.chaincoin.org",
-    long_description="""Lightweight Chaincoinpay Wallet"""
+    description="Lightweight SpectrumCash Wallet",
+    author="Sibby Yose",
+    author_email="anonymouszarsa@gmail.com",
+    license="MIT Licence",
+    url="https://electrum_spectrumcash.org",
+    long_description="""Lightweight SpectrumCash Wallet""",
 )

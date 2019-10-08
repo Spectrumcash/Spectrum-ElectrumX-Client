@@ -14,7 +14,7 @@ NOTE on apk signing: To create a keystore and sign the apk you need to install
 To create a keystore run the following command:
 
     mkdir ~/.jks && keytool -genkey -v -keystore ~/.jks/keystore \
-        -alias electrum.chaincoin.org -keyalg RSA -keysize 2048 \
+        -alias electrum.spectrumcash.org -keyalg RSA -keysize 2048 \
         -validity 10000
 
 Then it shows a warning about the proprietary format and a command to migrate:
@@ -27,10 +27,10 @@ Manual signing:
     jarsigner -verbose \
         -tsa http://sha256timestamp.ws.symantec.com/sha256/timestamp \
         -sigalg SHA1withRSA -digestalg SHA1 \
-        -sigfile chaincoin-electrum \
+        -sigfile spectrumcash-electrum \
         -keystore ~/.jks/keystore \
-        Electrum_CHAINCOIN-3.0.6.1-release-unsigned.apk \
-        electrum.chaincoin.org
+        Electrum_SPECTRUMCASH-3.0.6.1-release-unsigned.apk \
+        electrum.spectrumcash.org
 
 Zipalign from Android SDK build tools is also required (set path to bin in
 settings file or with key -z). To install:
@@ -48,8 +48,8 @@ settings file or with key -z). To install:
 Manual zip aligning:
 
     android-sdk-linux/build-tools/27.0.3/zipalign -v 4 \
-        Electrum_CHAINCOIN-3.0.6.1-release-unsigned.apk \
-        Electrum_CHAINCOIN-3.0.6.1-release.apk
+        Electrum_SPECTRUMCASH-3.3.6.0-release-unsigned.apk \
+        SpectrumCash-Electrum-3.3.6.0-release.apk
 
 
 
@@ -113,7 +113,8 @@ try:
     import colorama
     from colorama import Fore, Style
     from github_release import (get_releases, gh_asset_download,
-                                gh_asset_upload, gh_asset_delete)
+                                gh_asset_upload, gh_asset_delete,
+                                gh_release_edit)
     from urllib3 import PoolManager
 except ImportError as e:
     print('Import error:', e)
@@ -133,18 +134,19 @@ SHA_FNAME = 'SHA256SUMS.txt'
 
 # make_ppa related definitions
 PPA_SERIES = {
-    'trusty': '14.04.1',
     'xenial': '16.04.1',
     'bionic': '18.04.1',
+    'cosmic': '18.10.1',
+    'disco': '19.04.1',
 }
 PEP440_PUBVER_PATTERN = re.compile('^((\d+)!)?'
                                    '((\d+)(\.\d+)*)'
                                    '([a-zA-Z]+\d+)?'
                                    '((\.[a-zA-Z]+\d+)*)$')
 REL_NOTES_PATTERN = re.compile('^#.+?(^[^#].+?)^#.+?', re.M | re.S)
-SDIST_NAME_PATTERN = re.compile('^Electrum-CHAINCOIN-(.*).tar.gz$')
-SDIST_DIR_TEMPLATE = 'Electrum-CHAINCOIN-{version}'
-PPA_SOURCE_NAME = 'electrum-chaincoin'
+SDIST_NAME_PATTERN = re.compile('^SpectrumCash-Electrum-(.*).tar.gz$')
+SDIST_DIR_TEMPLATE = 'SpectrumCash-Electrum-{version}'
+PPA_SOURCE_NAME = 'electrum-spectrumcash'
 PPA_ORIG_NAME_TEMPLATE = '%s_{version}.orig.tar.gz' % PPA_SOURCE_NAME
 CHANGELOG_TEMPLATE = """%s ({ppa_version}) {series}; urgency=medium
 {changes} -- {uid}  {time}""" % PPA_SOURCE_NAME
@@ -155,7 +157,7 @@ LP_ARCHIVES_TEMPLATE = '%s/~{user}/+archive/ubuntu/{ppa}' % LP_API_URL
 
 # sing_apk related definitions
 JKS_KEYSTORE = os.path.join(HOME_DIR, '.jks/keystore')
-JKS_ALIAS = 'electrum.chaincoin.org'
+JKS_ALIAS = 'electrum.spectrumcash.org'
 JKS_STOREPASS = 'JKS_STOREPASS'
 JKS_KEYPASS = 'JKS_KEYPASS'
 KEYTOOL_ARGS = ['keytool', '-list', '-storepass:env', JKS_STOREPASS]
@@ -163,12 +165,12 @@ JARSIGNER_ARGS = [
     'jarsigner', '-verbose',
     '-tsa', 'http://sha256timestamp.ws.symantec.com/sha256/timestamp',
     '-sigalg', 'SHA1withRSA', '-digestalg', 'SHA1',
-    '-sigfile', 'chaincoin-electrum',
+    '-sigfile', 'spectrumcash-electrum',
     '-storepass:env', JKS_STOREPASS,
     '-keypass:env', JKS_KEYPASS,
 ]
-UNSIGNED_APK_PATTERN = re.compile('^Electrum_CHAINCOIN-(.*)-release-unsigned.apk$')
-SIGNED_APK_TEMPLATE = 'Electrum_CHAINCOIN-{version}-release.apk'
+UNSIGNED_APK_PATTERN = re.compile('^Electrum_SPECTRUMCASH-(.*)-release-unsigned.apk$')
+SIGNED_APK_TEMPLATE = 'SpectrumCash-Electrum-{version}-release.apk'
 
 
 os.environ['QUILT_PATCHES'] = 'debian/patches'
@@ -510,7 +512,7 @@ class SignApp(object):
                             dry_run=self.dry_run)
 
             if sdist_match and is_newest_release:
-                self.make_ppa(sdist_match, tmpdir)
+                self.make_ppa(sdist_match, tmpdir, tag)
 
     def sign_apk(self, unsigned_name, version):
         """Sign unsigned release apk"""
@@ -532,8 +534,10 @@ class SignApp(object):
 
         return name
 
-    def make_ppa(self, sdist_match, tmpdir):
+    def make_ppa(self, sdist_match, tmpdir, tag):
         """Build, sign and upload dsc to launchpad.net ppa from sdist.tar.gz"""
+        repo = self.repo
+
         with ChdirTemporaryDirectory() as ppa_tmpdir:
             sdist_name = sdist_match.group(0)
             version = sdist_match.group(1)
@@ -572,6 +576,10 @@ class SignApp(object):
                     changes = '\n'.join(changes)
                 else:
                     changes = '\n  * Porting to ppa\n\n'
+
+            if not self.dry_run:
+                gh_release_edit(repo, tag, name=version)
+                gh_release_edit(repo, tag, body=changes)
 
             os.chdir(sdist_dir)
             print('  Making PPAs for series: %s' % (', '.join(series)))

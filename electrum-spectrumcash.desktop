@@ -1,0 +1,22 @@
+# If you want Electrum to appear in a Linux app launcher ("start menu"), install this by doing:
+# sudo desktop-file-install electrum-spectrumcash.desktop
+
+[Desktop Entry]
+Comment=Lightweight SpectrumCash Client
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum-spectrumcash %u"
+GenericName[en_US]=SpectrumCash Wallet
+GenericName=SpectrumCash Wallet
+Icon=electrum-spectrumcash
+Name[en_US]=Electrum SpectrumCash Wallet
+Name=SpectrumCash Electrum
+Categories=Network;
+StartupNotify=true
+StartupWMClass=electrum-spectrumcash
+Terminal=false
+Type=Application
+MimeType=x-scheme-handler/spectrumcash;
+Actions=Testnet;
+
+[Desktop Action Testnet]
+Exec=sh -c "PATH=\"\\$HOME/.local/bin:\\$PATH\"; electrum-spectrumcash --testnet %u"
+Name=Testnet mode
